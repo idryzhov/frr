@@ -422,7 +422,7 @@ void bfd_cli_show_tx(struct vty *vty, struct lyd_node *dnode,
 	}
 }
 
-DEFPY_YANG(
+DEFPY_HIDDEN(
 	bfd_peer_echo, bfd_peer_echo_cmd,
 	"[no] echo-mode",
 	NO_STR
@@ -431,6 +431,10 @@ DEFPY_YANG(
 	if (!bfd_cli_is_profile(vty) && !bfd_cli_is_single_hop(vty)) {
 		vty_out(vty, "%% Echo mode is only available for single hop sessions.\n");
 		return CMD_WARNING_CONFIG_FAILED;
+	}
+
+	if (!no) {
+		vty_out(vty, "%% Echo mode is currently broken! Better disable it.\n");
 	}
 
 	nb_cli_enqueue_change(vty, "./echo-mode", NB_OP_MODIFY,
@@ -565,7 +569,7 @@ ALIAS_YANG(no_bfd_peer_minimum_ttl, no_bfd_profile_minimum_ttl_cmd,
       NO_STR
       "Expect packets with at least this TTL\n")
 
-ALIAS_YANG(bfd_peer_echo, bfd_profile_echo_cmd,
+ALIAS_HIDDEN(bfd_peer_echo, bfd_profile_echo_cmd,
       "[no] echo-mode",
       NO_STR
       "Configure echo mode\n")
